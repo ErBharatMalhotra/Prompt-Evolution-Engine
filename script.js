@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const evolvedPrompts = await fetchPromptEvolution(userPrompt);
             
             // 2. Render the cards (Text + Images)
-            renderCards(evolvedPrompts);
+            await renderCardsSequential(evolvedPrompts);
         } catch (error) {
             console.error(error);
             showError("Failed to evolve the prompt. The AI might be busy. Please try again.");
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function renderCards(prompts) {
+    async function renderCardsSequential(prompts) {
         const stepTitles = [
             "Step 1: The Raw Idea",
             "Step 2: Adding Detail",
@@ -91,21 +91,22 @@ document.addEventListener('DOMContentLoaded', () => {
             "Step 5: Cinematic Masterpiece"
         ];
 
-        prompts.forEach((promptText, index) => {
-            const card = document.createElement('div');
-            card.className = 'card';
+        resultsContainer.innerHTML = "";
 
-            // Generate Image URL using Pollinations Image API
-            // Adding a random seed ensures we don't get cached images if the prompt is identical
-            const seed = Math.floor(Math.random() * 1000);
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText)}?nologo=true&seed=&width=512&height=512`;
+        for (let index = 0; index < prompts.length; index++) {
+            const promptText = prompts[index];
+
+            const card = document.createElement("div");
+            card.className = "card";
+
+            const seed = Date.now() + index;
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText.trim())}` +
+                `?model=flux&nologo=true&seed=${seed}&width=512&height=512`;
 
             card.innerHTML = `
-                <div class="card-header">
-                    ${stepTitles[index] || `Step ${index + 1}`}
-                </div>
+                <div class="card-header">${stepTitles[index] || `Step ${index + 1}`}</div>
                 <div class="card-image">
-                    <img src="" alt="AI generated image for step ${index + 1}" loading="lazy">
+                    <img src="${imageUrl}" alt="AI generated image for step ${index + 1}" loading="lazy" onerror="this.style.display='none'">
                 </div>
                 <div class="card-body">
                     <p>${escapeHtml(promptText)}</p>
@@ -113,7 +114,10 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
             resultsContainer.appendChild(card);
-        });
+
+            // 🔑 IMPORTANT: delay before next image
+            await new Promise(res => setTimeout(res, 900));
+        }
     }
 
     function showError(message) {
