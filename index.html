@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Evolution Engine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Prompt Evolution Engine</h1>
+        <p>Visualize how an AI prompt evolves from a simple idea to a cinematic masterpiece.</p>
+    </header>
+
+    <main>
+        <section class="input-section">
+            <input type="text" id="userPrompt" placeholder="Enter a simple idea (e.g., 'A monk meditating')" autocomplete="off">
+            <button id="evolveBtn">Evolve Prompt</button>
+        </section>
+
+        <div id="loading" class="hidden">
+            <div class="spinner"></div>
+            <p>Consulting the AI Architect...</p>
+        </div>
+
+        <div id="error-msg" class="hidden"></div>
+
+        <section id="results-container" class="results-grid">
+            <!-- Evolution cards will be injected here -->
+        </section>
+    </main>
+
+    <footer>
+        <p>Powered by <a href="https://pollinations.ai" target="_blank">Pollinations.ai</a> | Experimental Learning Tool</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
