@@ -106,7 +106,14 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <div class="card-header">${stepTitles[index] || `Step ${index + 1}`}</div>
                 <div class="card-image">
-                    <img src="${imageUrl}" alt="AI generated image for step ${index + 1}" loading="lazy" onerror="this.style.display='none'">
+                    <div class="img-spinner"></div>
+                    <img 
+                        src="${imageUrl}" 
+                        alt="AI generated image for step ${index + 1}" 
+                        loading="lazy" 
+                        onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';"
+                        onerror="this.style.display='none'; this.previousElementSibling.style.display='none';"
+                    >
                 </div>
                 <div class="card-body">
                     <p>${escapeHtml(promptText)}</p>
